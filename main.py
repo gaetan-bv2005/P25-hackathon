@@ -190,6 +190,10 @@ dico_temps={} #Ce dico va stocker pour chaqsue camion, le temps auquel il s'est 
 for i in range(len(Camions)) :
     dico_temps[i]=[0]
 
+dico_log={} 
+for i in range(len(Camions)) :
+    dico_temps[i]=[]
+
 while horloge < 30: #il limite le nombre d'itérations que va réaliser le programme 
     horloge +=resultat_tmin[0]
     resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
@@ -228,7 +232,7 @@ while horloge < 30: #il limite le nombre d'itérations que va réaliser le progr
     else :
         id=str(Camions[resultat_tmin[1]].destination)
 
-    log.write(f"{dico_temps[resultat_tmin[1]][-2]}: {dest}{id}/{abs(dico_temps[resultat_tmin[1]][-1]-dico_temps[resultat_tmin[1]][-1])}+{nombre_bouteilles_vides_récupérées_par_le_camion}-{nombre_bouteilles_pleines_données_par_le_camion}\n")
+    dico_log[resultat_tmin[1]].append(f"{dico_temps[resultat_tmin[1]][-2]}: {dest}{id}/{abs(dico_temps[resultat_tmin[1]][-1]-dico_temps[resultat_tmin[1]][-1])}+{nombre_bouteilles_vides_récupérées_par_le_camion}-{nombre_bouteilles_pleines_données_par_le_camion}")
 
 
 
@@ -246,7 +250,11 @@ while horloge < 30: #il limite le nombre d'itérations que va réaliser le progr
     Camions[resultat_tmin[1]].t = nouveaux_temps
 
 
-    
+for i in dico_log.keys :
+    for j in dico_log[i] :
+        log.write(j)
+    log.write("\n")
+
 log.close()
 
 
