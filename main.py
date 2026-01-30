@@ -232,7 +232,7 @@ while horloge < 1000: # Augmenté un peu le temps pour voir la simu
 
     delta_t = abs(dico_temps[resultat_tmin[1]][-1]-dico_temps[resultat_tmin[1]][-2]) if len(dico_temps[resultat_tmin[1]]) > 1 else 0
     
-    ligne_a_ecrire = f"{dico_temps[resultat_tmin[1]][-1]}: {dest}{id}/{delta_t}+{nombre_bouteilles_vides_récupérées_par_le_camion}-{nombre_bouteilles_pleines_données_par_le_camion}"
+    ligne_a_ecrire = f"{dico_temps[resultat_tmin[1]][-1]}:{dest}{id}/{delta_t}+{nombre_bouteilles_vides_récupérées_par_le_camion}-{nombre_bouteilles_pleines_données_par_le_camion} "
     
     dico_log[resultat_tmin[1]].append(ligne_a_ecrire)
 
