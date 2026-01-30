@@ -1,4 +1,8 @@
 import urllib.request
+import numpy as np
+
+""" IMPORT DES DOCUMENTS """
+
 
 URL_CSV = "https://raw.githubusercontent.com/gaetan-bv2005/P25-hackathon/main/sujet-9-clients.csv"
 
@@ -26,3 +30,16 @@ def dico(url):
     return liste_dicos
 
 print(dico(URL_CSV))
+
+
+""" CODE """
+
+""" Fonctions et variables de base """"
+
+usine={1:[217.876,7653.44,437,0,510.83]}
+
+def distance (a,b) :
+    return (abs((a[0]-b[0])**2 + (a[1]-b[1])**2))**0.5
+
+def tempstrajet (a,b) :
+    return distance(a,b)/70
