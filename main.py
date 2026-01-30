@@ -97,7 +97,7 @@ class Client :
                 coord_y = dictionnaire[i]["coord_y"],
                 init = dictionnaire[i]["init"],
                 capacity = dictionnaire[i]["capacity"],
-                consumption = dictionnaire[i]["consumption"]
+                consumption = dictionnaire[i]["consumption"],
                 statut = False
             )
             L_clients.append(cl)
@@ -146,6 +146,29 @@ while nb_itérations < 1000 : #il limite le nombre d'itérations que va réalise
     #on gère la livraison / collecte du camion qui arrive en premier
     #on gère le déplacement des autres camions 
 
+#Fonction qui définit la cible vers lequel le camion dispo va se dirigier, et renvoie les coordonnées de cette cible
+x_usine = 217.876
+y_usine = 7653.44
+
+def cible(liste_clients, cam): 
+    clients_enattente = [] 
+    for client in liste_clients:
+        if client.statut == False :
+            clients_enattente.append(client)
+    if cam.nb_bouteilles_vides > cam.nb_bouteilles_pleines :
+        return (x_usine, y_usine)
+    else :
+        rapport = [] #on regarde pour chaque client la valeur du rapport nombre de bouteilles pleines à livrer / distance au client et on renvoie la position du client qui maximise ce rapport
+        for client in clients_enattente:
+            rapport.append(client.consumption / distance(cam,client))
+        max = rapport[0]
+        for i in range(len(rapport)):
+            if rapport[i]>max :
+                max = rapport[i]
+                cible_client = clients_enattente[i]   #on regarde quel client a le meilleur rapport
+        cam.en_chemin = True
+        liste_clients[cible_client.id_client - 1].statut = True  #on met à jour le statut du client dans la liste des clients
+        return (cible_client.coord_x, cible_client.coord_y)
 
 
 
