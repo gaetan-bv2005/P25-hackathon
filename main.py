@@ -1,24 +1,18 @@
 import urllib.request
 import numpy as np
 
-""" IMPORT DES DOCUMENTS """
+#IMPORT DES DOCUMENTS
 
-log = open("log.txt", "x")
+log = open("log.txt", "w")
 
 URL_CSV = "https://raw.githubusercontent.com/gaetan-bv2005/P25-hackathon/main/sujet-9-clients.csv"
 
 def lecture_cloud(url):
     with urllib.request.urlopen(url) as response:
-        # On lit, on décode en texte, et on découpe par lignes
         content = response.read().decode('utf-8')
         return content.splitlines()
-lignes = lecture_cloud(URL_CSV)
-print(f"Chargement réussi : {len(lignes)} clients trouvés.")
-
-print(lignes)
 
 def dico(url):
-    #créer une liste de dictionnaires : un dictionnaire par client
     sample = lecture_cloud(url)
     liste_dicos = []
     entetes = sample[0].split(",")
@@ -30,17 +24,13 @@ def dico(url):
         liste_dicos.append(dico_ligne)
     return liste_dicos
 Longueur = len(dico(URL_CSV))
-print(dico(URL_CSV))
 
 
 """ CODE """
 
-
-
 class camion :
     def __init__(self,coord_x,coord_y,nb_bouteilles_vides,nb_bouteilles_pleines,destination,en_chemin,t):
-
-        self.coord_x = coord_x#coordonnées de la destination
+        self.coord_x = coord_x
         self.coord_y = coord_y
         self.nb_bouteilles_vides = nb_bouteilles_vides
         self.nb_bouteilles_pleines = nb_bouteilles_pleines
@@ -49,7 +39,6 @@ class camion :
         self.t = t
 
 #on créer tous les camions
-
 Camions ={}
 
 for i in range (30):
@@ -57,19 +46,12 @@ for i in range (30):
     if Camions[i].nb_bouteilles_pleines+Camions[i].nb_bouteilles_vides > 80:
         raise ValueError("Le camion ne peut pas transporter plus de 80 bouteilles au total.")
 
-print(Camions)
-        
-
-
-
 #coordonnées de l'usine
-
 x_usine=217.876
 y_usine=6753.44
 
 
 # CLASSE CLIENT
-
 class Client :
     def __init__(self, id_client, coord_x, coord_y, nb_vides, nb_pleines, capacity, consumption, statut):
         self.id_client = id_client
@@ -81,9 +63,8 @@ class Client :
         self.consumption = consumption
         self.statut = statut
     def __str__(self):
-        return f"Client {self.id_client} : coord_x={self.coord_x}, coord_y={self.coord_y}, nb_vides={self.nb_vides}, nb_pleines={self.nb_pleines}, capacity={self.capacity}, consumption={self.consumption}, statut={self.consumption}"
+        return f"Client {self.id_client}"
 
-    
 def liste_clients():
     dictionnaire = dico(URL_CSV)
     L_clients = []
@@ -92,8 +73,8 @@ def liste_clients():
             id_client = i+1,
             coord_x = float(dictionnaire[i]["coord_x"]),
             coord_y = float(dictionnaire[i]["coord_y"]),
-            nb_vides = int(dictionnaire[i]["init"]),
-            nb_pleines = 0,
+            nb_vides = 0, # Au début on suppose 0 vides
+            nb_pleines = int(dictionnaire[i]["init"]), # Init correspond aux pleines
             capacity = int(dictionnaire[i]["capacity"]),
             consumption = float(dictionnaire[i]["consumption"]),
             statut = False
@@ -122,34 +103,28 @@ def distance (a,b) :
 def tempstrajet (a,b) :
     return distance(a,b)/70
 
-def trouvertmin () : #renvoie [tmin,indice du camion tq tmin] (TROUVE QUEL CAMION ARRIVE EN PREMIER)
-    L=[]
-    minimum=Camions[0].t
+def trouvertmin () : 
+    minimum=1000000
     indicemin=0
     for i in range(len(Camions)) :
         if Camions[i].t<minimum :
             minimum=Camions[i].t
             indicemin=i
-    return [minimum, i]
-
-resultat_tmin=trouvertmin () 
+    return [minimum, indicemin]
 
 def update_T() : # Update les tmin de chaque camion
     for key, item in Camions.items() :
         item.t=item.t-resultat_tmin[0]
-    
 
-def update_stock(tmin) : #après avoir déterminer tmin, on udpate les stocks des clients et de l'usine pour que les soustractions dans les camions soient les bonnes
+def update_stock(tmin) : 
     for client in clients:
-        client.nb_pleines -= client.consumption * tmin
+        conso = client.consumption * tmin
+        client.nb_pleines -= conso
+        client.nb_vides += conso
         if client.nb_pleines < 0:
-            client.pleines = 0
+            client.nb_pleines = 0
     usine.nb_pleines += usine.consumption*tmin
 
-
-#Fonction qui définit la cible vers lequel le camion dispo va se dirigier, et renvoie les coordonnées de cette cible
-x_usine = 217.876
-y_usine = 7653.44
 
 def calcul_n_livrable(camion, client):
     place_libre_camion = 80 - (camion.nb_bouteilles_pleines + camion.nb_bouteilles_vides)
@@ -167,97 +142,117 @@ def cible(liste_clients, cam):
     if cam.nb_bouteilles_vides > cam.nb_bouteilles_pleines :
         return 1000 #=usine.id_client 
     else :
-        rapport = [] #on regarde pour chaque client la valeur du rapport nombre de bouteilles pleines à livrer / distance au client et on renvoie la position du client qui maximise ce rapport
-        for client in clients_enattente:
+        rapport = [] 
+        indices_valides = []
+        for i, client in enumerate(clients_enattente):
             n = calcul_n_livrable(cam,client)
-            if distance(cam,client) >0:
-                rapport.append(n/distance(cam,client))
-        max = rapport[0]
+            d = distance(cam,client)
+            if d > 0:
+                rapport.append(n/d)
+                indices_valides.append(i)
+        
+        if not rapport: return 1000
+
+        max_val = rapport[0]
+        cible_client = clients_enattente[indices_valides[0]]
+
         for i in range(len(rapport)):
-            if rapport[i]>max :
-                max = rapport[i]
-                indice = i
-                cible_client = clients_enattente[i]   #on regarde quel client a le meilleur rapport
+            if rapport[i]>max_val :
+                max_val = rapport[i]
+                cible_client = clients_enattente[indices_valides[i]]
+        
         cam.en_chemin = True
-        clients[indice].statut = True  #on met à jour le statut du client dans la liste des clients
+        clients[cible_client.id_client - 1].statut = True 
         return cible_client.id_client
 
 
 horloge=0
 G=0
 
-dico_temps={} #Ce dico va stocker pour chaqsue camion, le temps auquel il s'est arreté la dèrnirère fois
+dico_temps={} 
 for i in range(len(Camions)) :
     dico_temps[i]=[0]
 
 dico_log={} 
 for i in range(len(Camions)) :
-    dico_temps[i]=[]
+    dico_log[i]=[] # Correction ici pour initialiser correctement
 
-while horloge < 30: #il limite le nombre d'itérations que va réaliser le programme 
+resultat_tmin = [0, 0] # Init pour entrer dans la boucle
+
+while horloge < 1000: # Augmenté un peu le temps pour voir la simu
+    
+    resultat_tmin=trouvertmin () 
+    
+    # Petite sécurité si t=0 pour éviter la boucle infinie
+    if resultat_tmin[0] == 0:
+        pass
+
     horloge +=resultat_tmin[0]
-    resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
-    client_livre = Camions[resultat_tmin[1]].destination #on récupère l'indice de la destination du camion qui arrive en premier
-    update_T() #on update les tmin des camion
-    update_stock(resultat_tmin[0]) #on met à jour les stocks des clients et de l'usine durant le temps tmin
+    
+    client_livre = Camions[resultat_tmin[1]].destination 
+    update_T() 
+    update_stock(resultat_tmin[0]) 
 
     if client_livre != 1000: # Le client livré n'est pas l'usine
-        nombre_bouteilles_pleines_données_par_le_camion = min(clients[client_livre].capacity-clients[client_livre].nb_pleines,Camions[resultat_tmin[1]].nb_bouteilles_pleines)
+        idx = client_livre - 1
+        nombre_bouteilles_pleines_données_par_le_camion = min(clients[idx].capacity-clients[idx].nb_pleines,Camions[resultat_tmin[1]].nb_bouteilles_pleines)
         Camions[resultat_tmin[1]].nb_bouteilles_pleines = Camions[resultat_tmin[1]].nb_bouteilles_pleines - nombre_bouteilles_pleines_données_par_le_camion
-        clients[client_livre].nb_pleines = clients[client_livre].nb_pleines + nombre_bouteilles_pleines_données_par_le_camion
-        nombre_bouteilles_vides_récupérées_par_le_camion = min(clients[client_livre].nb_vides,80-Camions[resultat_tmin[1]].nb_bouteilles_vides-Camions[resultat_tmin[1]].nb_bouteilles_pleines) #on récupère le nombre de bouteilles vides que le client doit donner
+        clients[idx].nb_pleines = clients[idx].nb_pleines + nombre_bouteilles_pleines_données_par_le_camion
+        nombre_bouteilles_vides_récupérées_par_le_camion = min(clients[idx].nb_vides,80-Camions[resultat_tmin[1]].nb_bouteilles_vides-Camions[resultat_tmin[1]].nb_bouteilles_pleines) 
         Camions[resultat_tmin[1]].nb_bouteilles_vides += nombre_bouteilles_vides_récupérées_par_le_camion
-        G=G+200*nombre_bouteilles_pleines_données_par_le_camion-0.7*distance(Camions[resultat_tmin[1]],clients[client_livre])
-
-
-
+        G=G+200*nombre_bouteilles_pleines_données_par_le_camion-0.7*distance(Camions[resultat_tmin[1]],clients[idx])
+        
+        # Mise à jour position physique du camion
+        Camions[resultat_tmin[1]].coord_x = clients[idx].coord_x
+        Camions[resultat_tmin[1]].coord_y = clients[idx].coord_y
+        clients[idx].statut = False 
 
     else :
         Camions[resultat_tmin[1]].nb_bouteilles_vides = 0
         Camions[resultat_tmin[1]].nb_bouteilles_pleines = 80
         G=G-0.7*distance(Camions[resultat_tmin[1]],usine)
+        # Mise à jour position physique du camion (Usine)
+        Camions[resultat_tmin[1]].coord_x = x_usine
+        Camions[resultat_tmin[1]].coord_y = y_usine
 
     dico_temps[resultat_tmin[1]].append(horloge)
     
-    dest=""  ####DESTINATION = usine ou client
+    dest=""  
     
     if Camions[resultat_tmin[1]].coord_x == x_usine and Camions[resultat_tmin[1]].coord_y == y_usine :
         dest="P"
     else :
         dest="C"
 
-    id="" ##### DESTINATION NUMERO (=1000 POUR USINE)
+    id="" 
     if  Camions[resultat_tmin[1]].destination ==1000 :
         id="1"
     else :
         id=str(Camions[resultat_tmin[1]].destination)
 
-    dico_log[resultat_tmin[1]].append(f"{dico_temps[resultat_tmin[1]][-2]}: {dest}{id}/{abs(dico_temps[resultat_tmin[1]][-1]-dico_temps[resultat_tmin[1]][-1])}+{nombre_bouteilles_vides_récupérées_par_le_camion}-{nombre_bouteilles_pleines_données_par_le_camion}")
+    delta_t = abs(dico_temps[resultat_tmin[1]][-1]-dico_temps[resultat_tmin[1]][-2]) if len(dico_temps[resultat_tmin[1]]) > 1 else 0
+    
+    ligne_a_ecrire = f"{dico_temps[resultat_tmin[1]][-1]}: {dest}{id}/{delta_t}+{nombre_bouteilles_vides_récupérées_par_le_camion}-{nombre_bouteilles_pleines_données_par_le_camion}"
+    
+    dico_log[resultat_tmin[1]].append(ligne_a_ecrire)
 
-
-
-    ancienne_cible = Camions[resultat_tmin[1]].destination
-
-
-    #réafectation de la cible du camion
+    # réafectation de la cible du camion
     nouvelle_cible = cible(liste_clients,Camions[resultat_tmin[1]])
-    if nouvelle_cible = 1000:
-        nouvelle_cible == len(clients)-1
     
     Camions[resultat_tmin[1]].destination = nouvelle_cible
 
-    nouveaux_temps = (np.sqrt((clients[nouvelle_cible].coord_x -clients[ancienne_cible].coord_x )**2 + (clients[nouvelle_cible].coord_y -clients[ancienne_cible].coord_y)**2 ))/70
-    Camions[resultat_tmin[1]].t = nouveaux_temps
+    # On calcule la distance entre le camion (qui est maintenant à l'ancienne cible) et la nouvelle cible
+    objet_cible = None
+    if nouvelle_cible == 1000:
+        objet_cible = usine
+    else:
+        objet_cible = clients[nouvelle_cible - 1]
+    
+    Camions[resultat_tmin[1]].t = tempstrajet(Camions[resultat_tmin[1]], objet_cible) # Mise à jour du temps t pour que le camion reparte
 
-
-for i in dico_log.keys :
-    for j in dico_log[i] :
+for i in dico_log.keys() :
+    for j in dico_log[i]:
         log.write(j)
     log.write("\n")
-
 log.close()
-
-
-
-
-
+print("Terminé")
