@@ -134,19 +134,7 @@ def update_T() : # Update les tmin de chaque camion
     return
 
 
-#au début les camions sont tous en chemin
 
-nb_itérations = 0
-while nb_itérations < 1000 : #il limite le nombre d'itérations que va réaliser le programme 
-    nb_itérations += 1
-    resultat_tmin=trouvertmin ()[1] #on cherche le camion qui arrive en premier
-
-    update_position() #on met à jour la position des camions
-    update_T() #on update les tmin des camions
-
-
-    #on gère la livraison / collecte du camion qui arrive en premier
-    #on gère le déplacement des autres camions 
 
 #Fonction qui définit la cible vers lequel le camion dispo va se dirigier, et renvoie les coordonnées de cette cible
 x_usine = 217.876
@@ -173,6 +161,26 @@ def cible(liste_clients, cam):
         return (cible_client.coord_x, cible_client.coord_y)
 
 
+nb_itérations = 0
+while nb_itérations < 1000 : #il limite le nombre d'itérations que va réaliser le programme 
+    nb_itérations += 1
+    resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
+    client_livre = resultat_tmin[1].destination #on récupère l'indice de la destination du camion qui arrive en premier
+    nombre_bouteilles_pleines_données_par_le_camion = client_livre.capacity-client_livre.nb_pleines #on récupère le nombre de bouteilles pleines que le client doit recevoir
+    nombre_bouteilles_pleines_données_par_le_camion = min(client_livre.capacity-client_livre.nb_pleines,resultat_tmin[1].nb_bouteilles_pleines)
+    
+    
+    
+
+    update_position() #on met à jour la position des camions
+    update_T() #on update les tmin des camions
+
+    
+
+    #on gère la livraison / collecte du camion qui arrive en premier
+
+
+    #on gère le déplacement des autres camions 
 
 
 
