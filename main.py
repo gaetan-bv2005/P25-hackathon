@@ -183,12 +183,14 @@ while nb_itérations < 1000 : #il limite le nombre d'itérations que va réalise
         nombre_bouteilles_pleines_données_par_le_camion = min(client_livre.capacity-client_livre.nb_pleines,Camions[resultat_tmin[1]].nb_bouteilles_pleines)
         Camions[resultat_tmin[1]].nb_bouteilles_pleines = Camions[resultat_tmin[1]].nb_bouteilles_pleines - nombre_bouteilles_pleines_données_par_le_camion
         client_livre.nb_pleines = client_livre.nb_pleines + nombre_bouteilles_pleines_données_par_le_camion
+        G=G+200*nombre_bouteilles_pleines_données_par_le_camion-0.7*distance(Camions[resultat_tmin[1]],clients[client_livre])
+        
     
 
     else :
         #livraison à l'usine
         Camions[resultat_tmin[1]].nb_bouteilles_pleines = 0 #le camion vide toutes ses bouteilles pleines à l'usine
-
+        G=G-0.7*distance(Camions[resultat_tmin[1]],usine)
     
 
 
