@@ -171,51 +171,36 @@ def cible(liste_clients, cam):
         return cible_client.id_client
 
 
-G=0
+nb_itérations=0
 
 while nb_itérations < 1000 : #il limite le nombre d'itérations que va réaliser le programme 
     nb_itérations += 1
     resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
     client_livre = Camions[resultat_tmin[1]].destination #on récupère l'indice de la destination du camion qui arrive en premier
-    update_stock() #on met à jour les stocks des clients et de l'usine durant le temps tmin
-    update_T() #on update les tmin des camions
+    update_T() #on update les tmin des camion
+    update_stock(resultat_tmin[0]) #on met à jour les stocks des clients et de l'usine durant le temps tmin
 
-    
     if client_livre != 1000: # Le client livré n'est pas l'usine
         nombre_bouteilles_pleines_données_par_le_camion = min(client_livre.capacity-client_livre.nb_pleines,Camions[resultat_tmin[1]].nb_bouteilles_pleines)
         Camions[resultat_tmin[1]].nb_bouteilles_pleines = Camions[resultat_tmin[1]].nb_bouteilles_pleines - nombre_bouteilles_pleines_données_par_le_camion
         client_livre.nb_pleines = client_livre.nb_pleines + nombre_bouteilles_pleines_données_par_le_camion
-        G=G+200*nombre_bouteilles_pleines_données_par_le_camion-0.7*distance(Camions[resultat_tmin[1]],clients[client_livre])
-        
-    
+        nombre_bouteilles_vides_récupérées_par_le_camion = min(client_livre.nb_vides,80-Camions[resultat_tmin[1]].nb_bouteilles_vides-Camions[resultat_tmin[1]].nb_bouteilles_pleines) #on récupère le nombre de bouteilles vides que le client doit donner
+        Camions[resultat_tmin[1]].nb_bouteilles_vides += nombre_bouteilles_vides_récupérées_par_le_camion
+
 
     else :
-        #livraison à l'usine
-        Camions[resultat_tmin[1]].nb_bouteilles_pleines = 0 #le camion vide toutes ses bouteilles pleines à l'usine
-        G=G-0.7*distance(Camions[resultat_tmin[1]],usine)
-    
+        Camions[resultat_tmin[1]].nb_bouteilles_vides = 0
+        Camions[resultat_tmin[1]].nb_bouteilles_pleines = 80
 
 
-
-    #gestion des bouteilles vides
-    nombre_bouteilles_vides_récupérées_par_le_camion = min(client_livre.nb_vides,80-Camions[resultat_tmin[1]].nb_bouteilles_vides-Camions[resultat_tmin[1]].nb_bouteilles_pleines) #on récupère le nombre de bouteilles vides que le client doit donner
-    
+    #réafectation de la cible du camion
+    nouvelle_cible = cible(liste_clients,Camions[resultat_tmin[1]])
+    Camions[resultat_tmin[1]].destination = nouvelle_cible
 
 
 
 
-    
-    
 
-    update_position() #on met à jour la position des camions
-
-
-    
-
-    #on gère la livraison / collecte du camion qui arrive en premier
-
-
-    #on gère le déplacement des autres camions  
 
 
 
