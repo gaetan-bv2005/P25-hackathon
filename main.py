@@ -175,12 +175,21 @@ while nb_itérations < 1000 : #il limite le nombre d'itérations que va réalise
     nb_itérations += 1
     resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
     client_livre = Camions[resultat_tmin[1]].destination #on récupère l'indice de la destination du camion qui arrive en premier
+    update_stock() #on met à jour les stocks des clients et de l'usine durant le temps tmin
 
-    #gestion des bouteilles pleines
-    nombre_bouteilles_pleines_données_par_le_camion = client_livre.capacity-client_livre.nb_pleines #on récupère le nombre de bouteilles pleines que le client doit recevoir
-    nombre_bouteilles_pleines_données_par_le_camion = min(client_livre.capacity-client_livre.nb_pleines,Camions[resultat_tmin[1]].nb_bouteilles_pleines)
-    Camions[resultat_tmin[1]].nb_bouteilles_pleines = Camions[resultat_tmin[1]].nb_bouteilles_pleines - nombre_bouteilles_pleines_données_par_le_camion
-    client_livre.nb_pleines = client_livre.nb_pleines + nombre_bouteilles_pleines_données_par_le_camion
+    if client_livre != 1000: # Le client livré n'est pas l'usine
+        nombre_bouteilles_pleines_données_par_le_camion = min(client_livre.capacity-client_livre.nb_pleines,Camions[resultat_tmin[1]].nb_bouteilles_pleines)
+        Camions[resultat_tmin[1]].nb_bouteilles_pleines = Camions[resultat_tmin[1]].nb_bouteilles_pleines - nombre_bouteilles_pleines_données_par_le_camion
+        client_livre.nb_pleines = client_livre.nb_pleines + nombre_bouteilles_pleines_données_par_le_camion
+    
+
+    else :
+        #livraison à l'usine
+        Camions[resultat_tmin[1]].nb_bouteilles_pleines = 0 #le camion vide toutes ses bouteilles pleines à l'usine
+
+    
+
+
 
     #gestion des bouteilles vides
     nombre_bouteilles_vides_récupérées_par_le_camion = min(client_livre.nb_vides,80-Camions[resultat_tmin[1]].nb_bouteilles_vides-Camions[resultat_tmin[1]].nb_bouteilles_pleines) #on récupère le nombre de bouteilles vides que le client doit donner
