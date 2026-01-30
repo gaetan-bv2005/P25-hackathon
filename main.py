@@ -150,7 +150,7 @@ def cible(liste_clients, cam):
     else :
         rapport = [] #on regarde pour chaque client la valeur du rapport nombre de bouteilles pleines à livrer / distance au client et on renvoie la position du client qui maximise ce rapport
         for client in clients_enattente:
-            rapport.append(client.consumption / distance(cam,client))
+            rapport.append((client.capacity - client.nb_pleines) / distance(cam,client))
         max = rapport[0]
         for i in range(len(rapport)):
             if rapport[i]>max :
