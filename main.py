@@ -49,13 +49,14 @@ Y0_camion = Y_clients
 
 
 class camion :
-    def __init__(self,position,nb_bouteilles_vides,nb_bouteilles_pleines,en_chemin):
+    def __init__(self,position,nb_bouteilles_vides,nb_bouteilles_pleines,en_chemin,tmin):
 
         self.postion = position
         self.nb_bouteilles_vides = nb_bouteilles_vides
         self.nb_bouteilles_pleines = nb_bouteilles_pleines
         self.en_chemin = en_chemin
-
+        self.tmin = tmin
+        
         if nb_bouteilles_pleines+nb_bouteilles_vides > 80:
                 raise ValueError("Le camion ne peut pas transporter plus de 80 bouteilles au total.")
 
@@ -64,7 +65,7 @@ class camion :
 Camions ={}
 
 for i in range (30):
-    Camions["i"] =  camion((X0_camion,Y0_camion),10,20,True)
+    Camions["i"] =  camion((X0_camion,Y0_camion),10,20,True,0)
 
 print(Camions)
 
