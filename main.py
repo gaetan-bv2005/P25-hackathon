@@ -171,6 +171,8 @@ def cible(liste_clients, cam):
         return (cible_client.coord_x, cible_client.coord_y)
 
 
+G=0
+
 while nb_itérations < 1000 : #il limite le nombre d'itérations que va réaliser le programme 
     nb_itérations += 1
     resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
