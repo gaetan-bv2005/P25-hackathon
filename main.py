@@ -132,6 +132,22 @@ def update_T() : # Update les tmin de chaque camion
     return
 
 
+#au début les camions sont tous en chemin
+
+nb_itérations = 0
+while nb_itérations < 1000 : #il limite le nombre d'itérations que va réaliser le programme 
+    nb_itérations += 1
+    resultat_tmin=trouvertmin ()[1] #on cherche le camion qui arrive en premier
+
+    update_position() #on met à jour la position des camions
+    update_T() #on update les tmin des camions
+
+
+    #on gère la livraison / collecte du camion qui arrive en premier
+    #on gère le déplacement des autres camions 
+
+
+
 
 
 
