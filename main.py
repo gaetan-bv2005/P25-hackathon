@@ -230,17 +230,24 @@ while horloge < 30: #il limite le nombre d'itérations que va réaliser le progr
 
     log.write(f"{dico_temps[resultat_tmin[1]][-2]}: {dest}{id}/{abs(dico_temps[resultat_tmin[1]][-1]-dico_temps[resultat_tmin[1]][-1])}+{nombre_bouteilles_vides_récupérées_par_le_camion}-{nombre_bouteilles_pleines_données_par_le_camion}\n")
 
+
+
+    ancienne_cible = Camions[resultat_tmin[1]].destination
+
+
     #réafectation de la cible du camion
     nouvelle_cible = cible(liste_clients,Camions[resultat_tmin[1]])
+    if nouvelle_cible = 1000:
+        nouvelle_cible == len(clients)-1
+    
     Camions[resultat_tmin[1]].destination = nouvelle_cible
+
+    nouveaux_temps = (np.sqrt((clients[nouvelle_cible].coord_x -clients[ancienne_cible].coord_x )**2 + (clients[nouvelle_cible].coord_y -clients[ancienne_cible].coord_y)**2 ))/70
+    Camions[resultat_tmin[1]].t = nouveaux_temps
+
+
     
 log.close()
-
-
-
-
-
-
 
 
 
