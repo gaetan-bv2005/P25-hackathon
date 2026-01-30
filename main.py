@@ -66,33 +66,6 @@ print(Camions)
 x_usine=217.876
 y_usine=6753.44
 
-#positions initiales des camions
-def liste_clients():
-    dictionnaire = dico(URL_CSV)
-    L_clients = []
-    for i in range (Longueur):
-        cl = Client(
-            id_client = i+1,
-            coord_x = dictionnaire[i]["coord_x"],
-            coord_y = dictionnaire[i]["coord_y"],
-            nb_vides = dictionnaire[i]["nb_vides"],
-            nb_pleines = dictionnaire[i]["nb_pleines"],
-            capacity = dictionnaire[i]["capacity"],
-            consumption = dictionnaire[i]["consumption"],
-            statut = False
-        )
-        L_clients.append(cl)
-    return L_clients
-clients = liste_clients()
-
-for i in range (30):
-    Camions[i].coord_x= ((clients[i].coord_x)+x_usine)/2
-    Camions[i].coord_y= ((clients[i].coord_y)+y_usine)/2
-    Camions[i].destination=clients[i].id_client
-    Camions[i].t= np.sqrt((Camions[i].coord_x-clients[i].coord_x)**2+(Camions[i].coord_x-clients[i].coord_x)**2)/70
-    Camions[i].coord_x= clients[i].coord_x
-    Camions[i].coord_y= clients[i].coord_y
-
 
 # CLASSE CLIENT
 
@@ -110,6 +83,33 @@ class Client :
         return f"Client {self.id_client} : coord_x={self.coord_x}, coord_y={self.coord_y}, nb_vides={self.nb_vides}, nb_pleines={self.nb_pleines}, capacity={self.capacity}, consumption={self.consumption}, statut={self.consumption}"
 
     
+def liste_clients():
+    dictionnaire = dico(URL_CSV)
+    L_clients = []
+    for i in range (Longueur):
+        cl = Client(
+            id_client = i+1,
+            coord_x = dictionnaire[i]["coord_x"],
+            coord_y = dictionnaire[i]["coord_y"],
+            nb_vides = dictionnaire[i]["init"],
+            nb_pleines = 0,
+            capacity = dictionnaire[i]["capacity"],
+            consumption = dictionnaire[i]["consumption"],
+            statut = False
+        )
+        L_clients.append(cl)
+    return L_clients
+clients = liste_clients()
+
+#positions initiales des camions
+for i in range (30):
+    Camions[i].coord_x= ((clients[i].coord_x)+x_usine)/2
+    Camions[i].coord_y= ((clients[i].coord_y)+y_usine)/2
+    Camions[i].destination=clients[i].id_client
+    Camions[i].t= np.sqrt((Camions[i].coord_x-clients[i].coord_x)**2+(Camions[i].coord_x-clients[i].coord_x)**2)/70
+    Camions[i].coord_x= clients[i].coord_x
+    Camions[i].coord_y= clients[i].coord_y
+
 
 """ Fonctions et variables de base """
 
