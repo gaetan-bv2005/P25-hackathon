@@ -89,12 +89,12 @@ def liste_clients():
     for i in range (Longueur):
         cl = Client(
             id_client = i+1,
-            coord_x = dictionnaire[i]["coord_x"],
-            coord_y = dictionnaire[i]["coord_y"],
-            nb_vides = dictionnaire[i]["init"],
+            coord_x = float(dictionnaire[i]["coord_x"]),
+            coord_y = float(dictionnaire[i]["coord_y"]),
+            nb_vides = int(dictionnaire[i]["init"]),
             nb_pleines = 0,
-            capacity = dictionnaire[i]["capacity"],
-            consumption = dictionnaire[i]["consumption"],
+            capacity = int(dictionnaire[i]["capacity"]),
+            consumption = float(dictionnaire[i]["consumption"]),
             statut = False
         )
         L_clients.append(cl)
