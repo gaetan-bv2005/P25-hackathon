@@ -176,7 +176,9 @@ while nb_itérations < 1000 : #il limite le nombre d'itérations que va réalise
     resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
     client_livre = Camions[resultat_tmin[1]].destination #on récupère l'indice de la destination du camion qui arrive en premier
     update_stock() #on met à jour les stocks des clients et de l'usine durant le temps tmin
+    update_T() #on update les tmin des camions
 
+    
     if client_livre != 1000: # Le client livré n'est pas l'usine
         nombre_bouteilles_pleines_données_par_le_camion = min(client_livre.capacity-client_livre.nb_pleines,Camions[resultat_tmin[1]].nb_bouteilles_pleines)
         Camions[resultat_tmin[1]].nb_bouteilles_pleines = Camions[resultat_tmin[1]].nb_bouteilles_pleines - nombre_bouteilles_pleines_données_par_le_camion
@@ -202,7 +204,7 @@ while nb_itérations < 1000 : #il limite le nombre d'itérations que va réalise
     
 
     update_position() #on met à jour la position des camions
-    update_T() #on update les tmin des camions
+
 
     
 
