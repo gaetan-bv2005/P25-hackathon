@@ -150,6 +150,14 @@ def update_stock(tmin) : #après avoir déterminer tmin, on udpate les stocks de
 x_usine = 217.876
 y_usine = 7653.44
 
+def calcul_n_livrable(camion, client):
+    place_libre_camion = 80 - (camion.nb_bouteilles_pleines + camion.nb_bouteilles_vides)
+    nb_vides_recuperables = min(client.nb_vides, place_libre_camion)
+    vides_restantes_chez_client = client.nb_vides - nb_vides_recuperables
+    place_physique_dispo = client.capacity - (client.nb_pleines + vides_restantes_chez_client)
+    n = min(camion.nb_bouteilles_pleines, place_physique_dispo)
+    return max(0, n)
+
 def cible(liste_clients, cam): 
     clients_enattente = [] 
     for client in clients:
@@ -160,7 +168,8 @@ def cible(liste_clients, cam):
     else :
         rapport = [] #on regarde pour chaque client la valeur du rapport nombre de bouteilles pleines à livrer / distance au client et on renvoie la position du client qui maximise ce rapport
         for client in clients_enattente:
-            rapport.append((client.capacity - client.nb_pleines) / distance(cam,client))
+            n = calcul_n_livrable(cam,client)
+            rapport.append(n/distance(cam,client))
         max = rapport[0]
         for i in range(len(rapport)):
             if rapport[i]>max :
