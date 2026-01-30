@@ -3,6 +3,7 @@ import numpy as np
 
 """ IMPORT DES DOCUMENTS """
 
+log = open("log.txt", "x")
 
 URL_CSV = "https://raw.githubusercontent.com/gaetan-bv2005/P25-hackathon/main/sujet-9-clients.csv"
 
@@ -184,7 +185,7 @@ horloge=0
 G=0
 
 while horloge < 30*24: #il limite le nombre d'itérations que va réaliser le programme 
-    
+    horloge +=resultat_tmin[0]
     resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
     client_livre = Camions[resultat_tmin[1]].destination #on récupère l'indice de la destination du camion qui arrive en premier
     update_T() #on update les tmin des camion
@@ -206,11 +207,27 @@ while horloge < 30*24: #il limite le nombre d'itérations que va réaliser le pr
         Camions[resultat_tmin[1]].nb_bouteilles_pleines = 80
         G=G-0.7*distance(Camions[resultat_tmin[1]],usine)
 
+    dico_temps[resultat_tmin[1]].append(horloge)
+    
+    dest=""  ####DESTINATION = usine ou client
+    
+    if Camions[resultat_tmin[1]].coord_x == xusine and Camions[resultat_tmin[1]].coord_y == yusine :
+        dest="P"
+    else :
+        dest="C"
+
+    id="" ##### DESTINATION NUMERO (=1000 POUR USINE)
+        if  Camions[resultat_tmin[1]].destination ==1000 :
+            id="1"
+        else :
+            id=char(Camions[resultat_tmin[1]].destination)
+
+    log.write(dico_temps[resultat_tmin[1]][-2],":",dest,id,"/",abs(dico_temps[resultat_tmin[1]][-1]-dico_temps[resultat_tmin[1]][-1]),"+",nombre_bouteilles_vides_récupérées_par_le_camion,"-",nombre_bouteilles_pleines_données_par_le_camion,"\n") 
 
     #réafectation de la cible du camion
     nouvelle_cible = cible(liste_clients,Camions[resultat_tmin[1]])
     Camions[resultat_tmin[1]].destination = nouvelle_cible
-    horloge +=resultat_tmin[0]
+    
 
 
 
