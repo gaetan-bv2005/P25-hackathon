@@ -184,6 +184,10 @@ def cible(liste_clients, cam):
 horloge=0
 G=0
 
+dico_temps={} #Ce dico va stocker pour chaqsue camion, le temps auquel il s'est arreté la dèrnirère fois
+for i in range(len(Camions)) :
+    dico_temps[i]=[0]
+    
 while horloge < 30*24: #il limite le nombre d'itérations que va réaliser le programme 
     horloge +=resultat_tmin[0]
     resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
@@ -217,9 +221,9 @@ while horloge < 30*24: #il limite le nombre d'itérations que va réaliser le pr
         dest="C"
 
     id="" ##### DESTINATION NUMERO (=1000 POUR USINE)
-        if  Camions[resultat_tmin[1]].destination ==1000 :
+    if  Camions[resultat_tmin[1]].destination ==1000 :
             id="1"
-        else :
+    else :
             id=char(Camions[resultat_tmin[1]].destination)
 
     log.write(dico_temps[resultat_tmin[1]][-2],":",dest,id,"/",abs(dico_temps[resultat_tmin[1]][-1]-dico_temps[resultat_tmin[1]][-1]),"+",nombre_bouteilles_vides_récupérées_par_le_camion,"-",nombre_bouteilles_pleines_données_par_le_camion,"\n") 
