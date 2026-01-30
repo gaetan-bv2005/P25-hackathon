@@ -156,7 +156,7 @@ def cible(liste_clients, cam):
         if client.statut == False :
             clients_enattente.append(client)
     if cam.nb_bouteilles_vides > cam.nb_bouteilles_pleines :
-        return (x_usine, y_usine)
+        return 1000 #=usine.id_client 
     else :
         rapport = [] #on regarde pour chaque client la valeur du rapport nombre de bouteilles pleines à livrer / distance au client et on renvoie la position du client qui maximise ce rapport
         for client in clients_enattente:
@@ -168,7 +168,7 @@ def cible(liste_clients, cam):
                 cible_client = clients_enattente[i]   #on regarde quel client a le meilleur rapport
         cam.en_chemin = True
         clients[cible_client.id_client - 1].statut = True  #on met à jour le statut du client dans la liste des clients
-        return (cible_client.coord_x, cible_client.coord_y)
+        return cible_client.id_client
 
 
 G=0
