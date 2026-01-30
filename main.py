@@ -15,3 +15,16 @@ print(f"Chargement réussi : {len(lignes)} clients trouvés.")
 
 print(lignes)
 
+def dico(url):
+    #créer une liste de dictionnaires : un dictionnaire par client
+    sample = lecture_cloud(url)
+    liste_dicos = []
+    entetes = sample[0].split(",")
+    for ligne in sample[1:]:
+        valeurs = ligne.split(",")
+        dico_ligne = {}
+        for i, entete in enumerate(entetes):
+            dico_ligne[entete] = valeurs[i]
+        liste_dicos.append(dico_ligne)
+    return liste_dicos
+print(dico(URL_CSV))
