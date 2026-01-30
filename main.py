@@ -47,6 +47,10 @@ class camion :
         self.en_chemin = en_chemin
         self.t = t
 
+#on créer tous les camions
+
+Camions ={}
+
 for i in range (30):
     Camions[i] =  camion(0,0,10,20,0,True,0)
 
@@ -55,14 +59,6 @@ print(Camions)
 if nb_bouteilles_pleines+nb_bouteilles_vides > 80:
     raise ValueError("Le camion ne peut pas transporter plus de 80 bouteilles au total.")
 
-#on créer tous les camions
-
-Camions ={}
-
-for i in range (30):
-    Camions[i] =  camion(X0_camion,Y0_camion,10,20,ID,0)
-
-print(Camions)
 
 #coordonnées de l'usine
 
