@@ -181,6 +181,7 @@ def cible(liste_clients, cam):
 
 
 horloge=0
+G=0
 
 while horloge < 30*24: #il limite le nombre d'itérations que va réaliser le programme 
     
@@ -195,17 +196,21 @@ while horloge < 30*24: #il limite le nombre d'itérations que va réaliser le pr
         client_livre.nb_pleines = client_livre.nb_pleines + nombre_bouteilles_pleines_données_par_le_camion
         nombre_bouteilles_vides_récupérées_par_le_camion = min(client_livre.nb_vides,80-Camions[resultat_tmin[1]].nb_bouteilles_vides-Camions[resultat_tmin[1]].nb_bouteilles_pleines) #on récupère le nombre de bouteilles vides que le client doit donner
         Camions[resultat_tmin[1]].nb_bouteilles_vides += nombre_bouteilles_vides_récupérées_par_le_camion
+        G=G+200*nombre_bouteilles_pleines_données_par_le_camion-0.7*distance(Camions[resultat_tmin[1]],clients[client_livre])
+
+
 
 
     else :
         Camions[resultat_tmin[1]].nb_bouteilles_vides = 0
         Camions[resultat_tmin[1]].nb_bouteilles_pleines = 80
+        G=G-0.7*distance(Camions[resultat_tmin[1]],usine)
 
 
     #réafectation de la cible du camion
     nouvelle_cible = cible(liste_clients,Camions[resultat_tmin[1]])
     Camions[resultat_tmin[1]].destination = nouvelle_cible
-    hrologe +=resultat_tmin[0]
+    horloge +=resultat_tmin[0]
 
 
 
