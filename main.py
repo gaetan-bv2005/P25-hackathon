@@ -171,10 +171,10 @@ def cible(liste_clients, cam):
         return cible_client.id_client
 
 
-nb_itérations=0
+horloge=0
 
-while nb_itérations < 1000 : #il limite le nombre d'itérations que va réaliser le programme 
-    nb_itérations += 1
+while horloge < 30*24: #il limite le nombre d'itérations que va réaliser le programme 
+    
     resultat_tmin=trouvertmin () #on cherche le camion qui arrive en premier
     client_livre = Camions[resultat_tmin[1]].destination #on récupère l'indice de la destination du camion qui arrive en premier
     update_T() #on update les tmin des camion
@@ -196,6 +196,7 @@ while nb_itérations < 1000 : #il limite le nombre d'itérations que va réalise
     #réafectation de la cible du camion
     nouvelle_cible = cible(liste_clients,Camions[resultat_tmin[1]])
     Camions[resultat_tmin[1]].destination = nouvelle_cible
+    hrologe +=resultat_tmin
 
 
 
