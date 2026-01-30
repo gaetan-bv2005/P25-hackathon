@@ -49,9 +49,10 @@ Y0_camion = Y_clients
 
 
 class camion :
-    def __init__(self,position,nb_bouteilles_vides,nb_bouteilles_pleines,en_chemin,tmin):
+    def __init__(self,coord_x,coord_y,nb_bouteilles_vides,nb_bouteilles_pleines,en_chemin,tmin):
 
-        self.postion = position
+        self.coord_x = coord_x
+        self.coord_y = coord_y
         self.nb_bouteilles_vides = nb_bouteilles_vides
         self.nb_bouteilles_pleines = nb_bouteilles_pleines
         self.en_chemin = en_chemin
