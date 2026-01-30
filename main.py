@@ -143,7 +143,7 @@ def update_stock() : #après avoir déterminer tmin, on udpate les stocks des cl
         client.init -= client.consumption * resultat_tmin[0]
         if client.init < 0:
             client.init = 0
-    usine.init += production*t
+    usine.init += usine.consumption * resultat_tmin[0]
     return
 
 
