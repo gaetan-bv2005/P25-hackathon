@@ -36,19 +36,24 @@ print(dico(URL_CSV))
 
 
 
-
 class camion :
-    def __init__(self,coord_x,coord_y,nb_bouteilles_vides,nb_bouteilles_pleines,destination,t):
+    def __init__(self,coord_x,coord_y,nb_bouteilles_vides,nb_bouteilles_pleines,destination,en_chemin,t):
 
         self.coord_x = coord_x#coordonnées de la destination
         self.coord_y = coord_y
         self.nb_bouteilles_vides = nb_bouteilles_vides
         self.nb_bouteilles_pleines = nb_bouteilles_pleines
+        self.destination = destination
         self.en_chemin = en_chemin
         self.t = t
+
+for i in range (30):
+    Camions[i] =  camion(0,0,10,20,0,True,0)
+
+print(Camions)
         
-        if nb_bouteilles_pleines+nb_bouteilles_vides > 80:
-                raise ValueError("Le camion ne peut pas transporter plus de 80 bouteilles au total.")
+if nb_bouteilles_pleines+nb_bouteilles_vides > 80:
+    raise ValueError("Le camion ne peut pas transporter plus de 80 bouteilles au total.")
 
 #on créer tous les camions
 
