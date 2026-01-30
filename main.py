@@ -114,6 +114,16 @@ def distance (a,b) :
 def tempstrajet (a,b) :
     return distance(a,b)/70
 
+def trouvertmin () : #renvoie [tmin,indice du camion tq tmin] (TROUVE QUEL CAMION ARRIVE EN PREMIER)
+    L=[]
+    minimum=Camions[0].tmin
+    indicemin=0
+    for i in range(len(Camions)) :
+        if Camions[i].tmin<minimum :
+            minimum=Camions[i].tmin
+            indicemin=i
+    return [minimum, i]
+
 
 
 
