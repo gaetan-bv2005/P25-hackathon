@@ -196,7 +196,7 @@ while horloge < 30*24: #il limite le nombre d'itérations que va réaliser le pr
     #réafectation de la cible du camion
     nouvelle_cible = cible(liste_clients,Camions[resultat_tmin[1]])
     Camions[resultat_tmin[1]].destination = nouvelle_cible
-    hrologe +=resultat_tmin
+    hrologe +=resultat_tmin[0]
 
 
 
