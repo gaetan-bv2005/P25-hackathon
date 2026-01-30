@@ -69,7 +69,7 @@ print(Client.liste_clients()[2])
 usine={1:[217.876,7653.44,437,0,510.83]}
 
 def distance (a,b) :
-    return (abs((a[0]-b[0])**2 + (a[1]-b[1])**2))**0.5
+    return (abs((a.coord_x-b.coord_x)**2 + (a.coord_y-b.coord_y)**2))**0.5
 
 def tempstrajet (a,b) :
     return distance(a,b)/70
